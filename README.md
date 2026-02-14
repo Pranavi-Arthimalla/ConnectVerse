@@ -77,10 +77,10 @@ By transforming learners into mentors, we create a sustainable ecosystem of glob
 
 ⸻
 
-👥 Team
+👥a Team
 - Suhitha Vemuri-AP24110010264 – Frontend & UI
 - Pranavi Arthimalla-AP25110070491 – Logic & Functionality
-- Varnika Mamidala – Feature Design
-- Aakash Dodda – Presentation & Documentation
-- Kireeti Dhulipalla – Testing & Deployment
+- Varnika Mamidala-AP24110010650 – Feature Design
+- Aakash Dodda–AP24110011555 Presentation & Documentation
+- Kireeti Dhulipalla-AP24110010706 – Testing & Deployment
 Built by Team Strategists for Code for Connection 2026.
