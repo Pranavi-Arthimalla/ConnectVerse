@@ -63,7 +63,7 @@ const LS = {
 
 const $ = (id)=>document.getElementById(id);
 
-//to view and tables
+
 document.querySelectorAll(".tab").forEach(btn=>{
   btn.addEventListener("click", ()=>{
     document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
@@ -80,7 +80,6 @@ document.querySelectorAll(".tab").forEach(btn=>{
   });
 });
 
-// Theme + Dark + Shield
 $("themeSelect").addEventListener("change", (e)=>{
   setTheme(e.target.value);
 });
@@ -95,7 +94,7 @@ $("shieldBtn").addEventListener("click", ()=>{
 });
 
 function setTheme(themeClass){
-  // remove old theme classes
+
   document.body.classList.remove("theme-mint","theme-sky","theme-blush","theme-sunset","theme-lavender");
   document.body.classList.add(themeClass);
   localStorage.setItem(LS.THEME, themeClass);
@@ -115,7 +114,6 @@ function applyShield(){
   }
 }
 
-// Chips builder
 function buildChips(containerId, items, onToggle){
   const wrap = $(containerId);
   wrap.innerHTML = "";
@@ -134,7 +132,6 @@ function selectedChips(containerId){
   return Array.from($(containerId).querySelectorAll(".chip.on")).map(c=>c.textContent);
 }
 
-// Skill list builder
 function buildSkills(containerId, interests){
   const wrap = $(containerId);
   wrap.innerHTML = "";
@@ -164,7 +161,6 @@ function setSkills(containerId, skillsMap){
   });
 }
 
-// Data helpers
 function loadJSON(key, fallback){
   try{ return JSON.parse(localStorage.getItem(key)) ?? fallback; }
   catch{ return fallback; }
@@ -173,7 +169,6 @@ function saveJSON(key, val){
   localStorage.setItem(key, JSON.stringify(val));
 }
 
-// XP / Level / Badges
 function getStats(){
   return loadJSON(LS.STATS, { xp: 0, level: 1, streak: 0, helped: 0, gamesWon: 0 });
 }
@@ -200,7 +195,7 @@ function addXP(amount, reason){
   if(reason) toast(`${reason} (+${amount} XP)`);
 }
 
-// Toast
+
 function toast(msg){
   const el = document.createElement("div");
   el.className = "note";
@@ -213,12 +208,11 @@ function toast(msg){
   setTimeout(()=>el.remove(), 1800);
 }
 
-// Home init
+
 function initHome(){
-  // Quote
+  
   $("quoteBox").textContent = `🌿 ${QUOTES[Math.floor(Math.random()*QUOTES.length)]}`;
 
-  // Build chips
   buildChips("myInterests", INTERESTS, ()=>{
     buildSkills("mySkills", selectedChips("myInterests"));
   });
@@ -229,17 +223,16 @@ function initHome(){
   buildChips("myTags", TAGS);
   buildChips("pTags", TAGS);
 
-  // Populate initial skill lists
   buildSkills("mySkills", []);
   buildSkills("pSkills", []);
 
-  // Teach categories
+  
   const catSel = $("tCategory");
   const gameSel = $("gameTopic");
   catSel.innerHTML = INTERESTS.map(x=>`<option>${x}</option>`).join("");
   gameSel.innerHTML = INTERESTS.map(x=>`<option>${x}</option>`).join("");
 
-  // Buttons
+ 
   $("saveMeBtn").addEventListener("click", saveMe);
   $("loadDemoBtn").addEventListener("click", loadDemo);
   $("randomPartnerBtn").addEventListener("click", randomPartner);
@@ -265,7 +258,6 @@ function initHome(){
 
   $("gameTopic").addEventListener("change", renderQuestion);
 
-  // Load stored profiles if exist
   loadProfilesToUI();
   renderQuestion();
   renderProgressAndBadges();
@@ -275,7 +267,7 @@ function initHome(){
   renderDM();
 }
 
-// Save profile
+
 function saveMe(){
   const me = {
     name: $("myName").value.trim(),
@@ -303,7 +295,7 @@ function loadProfilesToUI(){
   if(me){
     $("myName").value = me.name || "";
     $("myStyle").value = me.style || "async";
-    // set chips
+    
     setChipSelection("myInterests", me.interests);
     buildSkills("mySkills", selectedChips("myInterests"));
     setSkills("mySkills", me.skills);
@@ -328,7 +320,6 @@ function setChipSelection(containerId, selected){
   });
 }
 
-// Demo profiles
 function loadDemo(){
   const me = {
     name: "SilentKnight",
@@ -376,7 +367,6 @@ function randomPartner(){
   toast("Partner randomized");
 }
 
-// Compatibility
 function normalizeSkill(s){
   if(s==="Beginner") return 1;
   if(s==="Intermediate") return 2;
@@ -404,33 +394,30 @@ function computeCompatibility(){
   }
   saveJSON(LS.PARTNER, p);
 
-  // Interest overlap score (0..60)
   const a = new Set(me.interests);
   const b = new Set(p.interests);
   const shared = [...a].filter(x=>b.has(x));
   const union = new Set([...me.interests, ...p.interests]);
   const interestScore = union.size ? (shared.length / union.size) * 60 : 0;
 
-  // Skill closeness score (0..20), average over shared interests
+ 
   let skillScore = 0;
   if(shared.length){
     let sum = 0;
     shared.forEach(i=>{
       const d = Math.abs(normalizeSkill(me.skills[i]) - normalizeSkill(p.skills[i]));
-      // distance 0 => 1.0, 1 => 0.66, 2 => 0.33
+    
       const closeness = Math.max(0, 1 - (d/3));
       sum += closeness;
     });
     skillScore = (sum / shared.length) * 20;
   }
 
-  // Tags match (0..10)
   const mt = new Set(me.tags);
   const pt = new Set(p.tags);
   const sharedTags = [...mt].filter(x=>pt.has(x));
   const tagScore = (sharedTags.length / 3) * 10;
 
-  // Style match (0..10)
   const styleScore = (me.style === p.style) ? 10 : 4;
 
   const total = Math.round(interestScore + skillScore + tagScore + styleScore);
@@ -447,7 +434,7 @@ function computeCompatibility(){
   renderCompatBox(me, p, breakdown);
   saveMatchHistory(me, p, breakdown);
 
-  // Move to Match tab automatically
+  
   document.querySelector('[data-view="matchView"]').click();
 }
 
@@ -497,7 +484,7 @@ function joinBestClub(){
   renderClubs();
 }
 
-// DM Chat
+
 function dmKey(){
   const me = loadJSON(LS.ME, {name:"Me"});
   const p = loadJSON(LS.PARTNER, {name:"Partner"});
@@ -533,7 +520,6 @@ function sendDM(){
   const msgs = loadJSON(key, []);
   msgs.push({ who:"me", text, time: new Date().toLocaleTimeString() });
 
-  // simple bot-like reply for demo
   msgs.push({
     who:"them",
     text: autoReply(text),
@@ -556,12 +542,12 @@ function autoReply(text){
     "I like that idea. What would be a next step?",
     "Cool perspective. What do you want to learn next?"
   ];
-  // lightweight response variety
+
   if(text.toLowerCase().includes("hi")) return "Hi! 😊 What interest are you exploring today?";
   return replies[Math.floor(Math.random()*replies.length)];
 }
 
-// Clubs
+
 function ensureClubsSeed(){
   const clubs = loadJSON(LS.CLUBS, null);
   if(clubs) return;
@@ -634,7 +620,6 @@ function sendClubMsg(){
   clubs[club] = clubs[club] || [];
   clubs[club].push({ who:"me", text, time: new Date().toLocaleTimeString() });
 
-  // demo “community reply”
   if(Math.random() < 0.55){
     clubs[club].push({ who:"them", text: autoReply(text), time: new Date().toLocaleTimeString() });
   }
@@ -647,7 +632,6 @@ function sendClubMsg(){
   renderProgressAndBadges();
 }
 
-// Games / Quiz
 let currentQuestion = null;
 
 function renderQuestion(){
@@ -694,7 +678,6 @@ function answerQuestion(idx, btn){
   renderProgressAndBadges();
 }
 
-// Profile / Badges / Progress
 function renderProgressAndBadges(){
   const s = getStats();
   const b = badgesFor(s);
@@ -711,7 +694,7 @@ function renderProgressAndBadges(){
     ? b.map(x=>`<span class="badge">${x}</span>`).join("")
     : `<span class="muted">No badges yet — play a challenge!</span>`;
 
-  renderTeach(); // update lock state
+  renderTeach();
   renderProfile();
 }
 
@@ -751,9 +734,9 @@ function renderHistory(){
     : `<div class="muted">No matches yet. Compute compatibility on Home.</div>`;
 }
 
-// Teach sessions (Udemy-ish)
+
 function canTeach(stats){
-  // Mentor (level 12) or Pro
+ 
   const b = badgesFor(stats);
   return b.some(x=>x.includes("Mentor")) || b.some(x=>x.includes("Pro"));
 }
@@ -826,7 +809,7 @@ function renderSessions(){
     : `<div class="muted">No sessions yet. Unlock Mentor and create one!</div>`;
 }
 
-// Streak (once per day)
+
 function claimStreak(){
   const last = localStorage.getItem(LS.STREAK_DATE);
   const today = new Date().toDateString();
@@ -845,10 +828,10 @@ function claimStreak(){
 
 function resetDemo(){
   Object.values(LS).forEach(k=>{
-    // remove by exact keys
+   
     if(typeof k === "string") localStorage.removeItem(k);
   });
-  // remove dm keys and any extras
+
   Object.keys(localStorage).forEach(k=>{
     if(k.startsWith("cv_dm_") || k.startsWith("cv_dm")) localStorage.removeItem(k);
   });
@@ -856,7 +839,7 @@ function resetDemo(){
   location.reload();
 }
 
-// Utils
+
 function escapeHTML(str){
   return String(str)
     .replaceAll("&","&amp;")
@@ -866,7 +849,7 @@ function escapeHTML(str){
     .replaceAll("'","&#039;");
 }
 
-// Start
+
 function boot(){
   applyThemeFromStorage();
   ensureClubsSeed();
@@ -875,3 +858,4 @@ function boot(){
   renderHistory();
 }
 boot();
+
