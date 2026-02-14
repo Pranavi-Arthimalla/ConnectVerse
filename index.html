@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ConnectVerse</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body class="theme-mint">
+  <div class="bg-dots"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">CV</div>
+      <div>
+        <div class="brand-title">ConnectVerse</div>
+        <div class="brand-sub">Connect • Play • Level Up • Teach</div>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <select id="themeSelect" class="pill" aria-label="Theme selector">
+        <option value="theme-mint">Mint Fresh 🌿</option>
+        <option value="theme-sky">Sky Blue 🌊</option>
+        <option value="theme-blush">Blush Pink 🌸</option>
+        <option value="theme-sunset">Sunset Warm 🌅</option>
+        <option value="theme-lavender">Lavender Calm 💜</option>
+      </select>
+
+      <button id="darkBtn" class="pill">Dark Mode</button>
+      <button id="shieldBtn" class="pill danger">Comfort Shield</button>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-view="homeView">Home</button>
+    <button class="tab" data-view="matchView">Match</button>
+    <button class="tab" data-view="clubsView">Clubs</button>
+    <button class="tab" data-view="gamesView">Games</button>
+    <button class="tab" data-view="profileView">Profile</button>
+    <button class="tab" data-view="teachView">Teach</button>
+  </nav>
+
+  <main class="wrap">
+    <!-- HOME -->
+    <section id="homeView" class="view active">
+      <div class="grid2">
+        <div class="card">
+          <h2>Your Profile Setup</h2>
+          <p class="muted">Pick interests, skill level, tags, and chat style. Then create a match.</p>
+
+          <div class="row">
+            <label>Nickname</label>
+            <input id="myName" placeholder="e.g., SilentKnight" maxlength="18"/>
+          </div>
+
+          <div class="row">
+            <label>Chat Style</label>
+            <select id="myStyle">
+              <option value="async">Async / Slow chat</option>
+              <option value="text">Text chat</option>
+              <option value="voice">Voice (later)</option>
+            </select>
+          </div>
+
+          <div class="row">
+            <label>Select Interests</label>
+            <div id="myInterests" class="chips"></div>
+          </div>
+
+          <div class="row">
+            <label>Skill Level (per interest)</label>
+            <div id="mySkills" class="skill-list"></div>
+          </div>
+
+          <div class="row">
+            <label>Tags (pick up to 3)</label>
+            <div id="myTags" class="chips"></div>
+            <div class="muted tiny">Examples: tournaments, leetcode, watercolor, indie-films…</div>
+          </div>
+
+          <div class="row actions">
+            <button id="saveMeBtn" class="btn primary">Save My Profile</button>
+            <button id="loadDemoBtn" class="btn">Load Demo Data</button>
+          </div>
+
+          <div id="homeMsg" class="note"></div>
+        </div>
+
+        <div class="card">
+          <h2>Daily Reflection</h2>
+          <div id="quoteBox" class="quote"></div>
+
+          <hr/>
+
+          <h2>Create a Match</h2>
+          <p class="muted">For hackathon demo, we generate a “partner” profile. You can change it too.</p>
+
+          <div class="row">
+            <label>Partner Nickname</label>
+            <input id="pName" placeholder="e.g., CodeMonk" maxlength="18"/>
+          </div>
+
+          <div class="row">
+            <label>Partner Chat Style</label>
+            <select id="pStyle">
+              <option value="async">Async / Slow chat</option>
+              <option value="text">Text chat</option>
+              <option value="voice">Voice (later)</option>
+            </select>
+          </div>
+
+          <div class="row">
+            <label>Partner Interests</label>
+            <div id="pInterests" class="chips"></div>
+          </div>
+
+          <div class="row">
+            <label>Partner Skill Level</label>
+            <div id="pSkills" class="skill-list"></div>
+          </div>
+
+          <div class="row">
+            <label>Partner Tags (up to 3)</label>
+            <div id="pTags" class="chips"></div>
+          </div>
+
+          <div class="row actions">
+            <button id="randomPartnerBtn" class="btn">Random Partner</button>
+            <button id="computeBtn" class="btn primary">Compute Compatibility</button>
+          </div>
+
+          <div id="compatBox" class="compat"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MATCH -->
+    <section id="matchView" class="view">
+      <div class="grid2">
+        <div class="card">
+          <h2>Match Result</h2>
+          <div id="matchSummary" class="big"></div>
+
+          <div class="breakdown" id="breakdown"></div>
+
+          <div class="row actions">
+            <button id="startChatBtn" class="btn primary">Start 1:1 Chat</button>
+            <button id="joinClubBtn" class="btn">Join Best Club</button>
+          </div>
+
+          <div class="note tiny">
+            Tip: Judges love the breakdown + “why you matched” explanation.
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>1:1 Chat (Local Demo)</h2>
+          <p class="muted">Messages saved in your browser (localStorage).</p>
+
+          <div id="dmChat" class="chat"></div>
+
+          <div class="chatbar">
+            <input id="dmInput" placeholder="Type something gentle…"/>
+            <button id="dmSend" class="btn primary small">Send</button>
+          </div>
+
+          <div class="muted tiny">
+            (In production: Firebase/WebSockets for real-time.)
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLUBS -->
+    <section id="clubsView" class="view">
+      <div class="grid2">
+        <div class="card">
+          <h2>Clubs</h2>
+          <p class="muted">Pick a club and chat with the community.</p>
+
+          <div id="clubList" class="club-list"></div>
+        </div>
+
+        <div class="card">
+          <h2 id="clubTitle">Club Chat</h2>
+
+          <div id="clubChat" class="chat"></div>
+
+          <div class="chatbar">
+            <input id="clubInput" placeholder="Share an idea, resource, or question…"/>
+            <button id="clubSend" class="btn primary small">Send</button>
+          </div>
+
+          <div class="row actions">
+            <button id="helpfulBtn" class="btn">I Helped Someone (+XP)</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GAMES -->
+    <section id="gamesView" class="view">
+      <div class="grid2">
+        <div class="card">
+          <h2>Mini Challenges</h2>
+          <p class="muted">Complete quick challenges to earn XP and badges.</p>
+
+          <div class="row">
+            <label>Choose Interest</label>
+            <select id="gameTopic"></select>
+          </div>
+
+          <div class="game-box">
+            <div id="qTitle" class="q-title"></div>
+            <div id="qBody" class="q-body"></div>
+            <div id="qOptions" class="q-options"></div>
+          </div>
+
+          <div class="row actions">
+            <button id="newQBtn" class="btn">New Question</button>
+          </div>
+
+          <div id="gameMsg" class="note"></div>
+        </div>
+
+        <div class="card">
+          <h2>Progress</h2>
+          <div id="progressBox" class="progress"></div>
+
+          <hr/>
+
+          <h2>Badges</h2>
+          <div id="badgeBox" class="badges"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROFILE -->
+    <section id="profileView" class="view">
+      <div class="grid2">
+        <div class="card">
+          <h2>Your Profile</h2>
+          <div id="profileCard" class="profile"></div>
+
+          <div class="row actions">
+            <button id="streakBtn" class="btn">Claim Daily Streak (+XP)</button>
+            <button id="resetBtn" class="btn danger">Reset Demo</button>
+          </div>
+
+          <div id="profileMsg" class="note"></div>
+        </div>
+
+        <div class="card">
+          <h2>Match History</h2>
+          <p class="muted">Saved locally — helps in your demo.</p>
+          <div id="historyBox" class="history"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TEACH -->
+    <section id="teachView" class="view">
+      <div class="grid2">
+        <div class="card">
+          <h2>Teach (Mentor / Pro unlock)</h2>
+          <div id="teachLock" class="note"></div>
+
+          <div id="teachForm" class="teach-form">
+            <div class="row">
+              <label>Session Title</label>
+              <input id="tTitle" placeholder="e.g., Chess Endgames for Beginners"/>
+            </div>
+
+            <div class="row">
+              <label>Category</label>
+              <select id="tCategory"></select>
+            </div>
+
+            <div class="row">
+              <label>Duration</label>
+              <select id="tDuration">
+                <option>30 min</option>
+                <option>45 min</option>
+                <option>60 min</option>
+              </select>
+            </div>
+
+            <div class="row">
+              <label>Short Description</label>
+              <textarea id="tDesc" rows="3" placeholder="What will learners gain?"></textarea>
+            </div>
+
+            <div class="row actions">
+              <button id="createSessionBtn" class="btn primary">Create Session</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Available Sessions</h2>
+          <div id="sessionList" class="sessions"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="muted tiny">ConnectVerse MVP • Front-end only • Stored locally in your browser</div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
